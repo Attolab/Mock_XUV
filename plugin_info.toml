@@ -1,8 +1,8 @@
 ## To modify by developer(s) of the plugin
 
 [plugin-info]
-SHORT_PLUGIN_NAME = 'template'  #to be modified, for instance daqmx then rename the module name:
-# (pymodaq_plugins_template become pymodaq_plugins_daqmx for instance)
+SHORT_PLUGIN_NAME = 'MockXUV'  #to be modified, for instance daqmx then rename the module name:
+# (pymodaq_plugins_MockXUV become pymodaq_plugins_daqmx for instance)
 
 package-url = 'https://github.com/PyMoDAQ/pymodaq_plugins_template' #to modify
 description = 'some word about your plugin'
@@ -13,7 +13,7 @@ license = 'MIT'
 
 [plugin-install]
 #packages required for your plugin:
-packages-required = ['pymodaq>=4.3.6']
+packages-required = ['pymodaq>=4.3.6', 'h5py']
 
 [features]  # defines the plugin features contained into this plugin
 instruments = true  # true if plugin contains instrument classes (else false, notice the lowercase for toml files)
