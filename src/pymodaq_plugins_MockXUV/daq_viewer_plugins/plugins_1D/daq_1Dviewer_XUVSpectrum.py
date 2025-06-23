@@ -29,6 +29,7 @@ class DAQ_1DViewer_XUVSpectrum(DAQ_Viewer_base):
              {'title': 'Clear ROI+Bin', 'name': 'clear_roi', 'type': 'bool_push', 'value': False},
              {'title': 'Binning', 'name': 'binning', 'type': 'list', 'limits': [1, 2]}, ]
          },
+        {'title': 'Set Background', 'name': 'take_background', 'type': 'bool_push', 'value': False},
 
         {'title': 'Timing', 'name': 'timing_opts', 'type': 'group', 'children':
             [{'title': 'Exposure Time (ms)', 'name': 'exposure_time', 'type': 'float', 'value': 0.13},
@@ -42,8 +43,8 @@ class DAQ_1DViewer_XUVSpectrum(DAQ_Viewer_base):
         ]
 
     def ini_attributes(self):
-        #  TODO declare the type of the wrapper (and assign it to self.controller) you're going to use for easy
         #  autocompletion
+        self.background = np.empty(0)
         self.controller: HHG_Spectrum = None
 
     def commit_settings(self, param: Parameter):
@@ -54,7 +55,8 @@ class DAQ_1DViewer_XUVSpectrum(DAQ_Viewer_base):
         param: Parameter
             A given parameter (within detector_settings) whose value has been changed by the user
         """
-        pass
+        if param.name() == "take_background":
+            self.take_background()
 
     def ini_detector(self, controller=None):
         """Detector communication initialization
@@ -95,6 +97,15 @@ class DAQ_1DViewer_XUVSpectrum(DAQ_Viewer_base):
     def close(self):
         """Terminate the communication protocol"""
         pass
+
+    def take_background(self):
+        bkg = np.ones_like(self.x_axis.get_data())*5.5
+        self.background = bkg
+        self.dte_signal.emit(DataToExport('HHG',
+                                          data=[DataFromPlugins(name='Mock1', data=bkg,
+                                                                dim='Data1D', labels=['background'],
+                                                                axes=[self.x_axis], do_plot=False, do_save=True)]))
+
 
     def grab_data(self, Naverage=1, **kwargs):
         """Start a grab from the detector
